@@ -1,0 +1,64 @@
+<% if flash[:contact_success] %>
+	<script type="text/javascript">
+    $(document).ready(function () {
+        $('#modalPush').modal('show');
+    });
+	</script>
+	<div class="modal fade" id="modalPush" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  	<div class="modal-dialog modal-notify modal-info" role="document">
+    	<div class="modal-content text-center">
+      	<div class="modal-header d-flex justify-content-center" style="background-color: #00ff00">
+        	<p class="heading" style="color: white; font-size: 22px; font-weight: 500">Message sent</p>
+      	</div>
+      	<div class="modal-body">
+        	<i class="fas fa-paper-plane fa-4x" style="color: #00ff00"></i>
+        	<p style="margin-top: 20px"><%= flash[:contact_success] %></p>
+      	</div>
+      	<div class="modal-footer justify-content-center">
+					<a type="button" class="btn btn-outline-info waves-effect" data-dismiss="modal" style="font-weight: 540">OK</a>
+      	</div>
+    	</div>
+  	</div>
+	</div>
+<% end %>
+<a href="/" class="close"></a>
+
+<main class="contact-main">
+  <div class="contact">
+		<div class="container-contact">
+			<div class="contact-pic">
+				<img src="<%= asset_path('contact.png') %>">
+			</div>
+
+      <%= form_with(url: "/contact", class: "contact-form") do|form| %>
+				<span class="contact-form-title">
+					Get in touch
+				</span>
+
+				<div class="wrap-input">
+					<input class="input" type="text" placeholder="Name">
+					<span class="shadow-input"></span>
+				</div>
+
+				<div class="wrap-input">
+					<input class="input" type="text" placeholder="Email">
+					<span class="shadow-input"></span>
+				</div>
+
+				<div class="wrap-input">
+					<input class="input" type="text" placeholder="Subject">
+					<span class="shadow-input"></span>
+				</div>
+
+				<div class="wrap-input">
+					<textarea class="input" placeholder="Message"></textarea>
+					<span class="shadow-input"></span>
+				</div>
+
+				<div class="container-contact-form-btn">
+          <%= form.submit "Send Email", class: "contact-form-btn" %>
+				</div>
+			<% end %>
+		</div>
+	</div>
+</main>

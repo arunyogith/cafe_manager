@@ -1,0 +1,35 @@
+<% menu_items = menu_items.sort_items %>
+<div class="menu-items">
+  <div class="row justify-content-center flex">
+    <% menu_items.each do |mitem| %>
+      <div class="col-md-3 col-sm-6">
+        <div class="card middle">
+          <div class="front">
+            <% if mitem.image.attached? %>
+              <%= image_tag(mitem.image, class: "mitem-img") %>
+            <% else %>
+              <img class="no-image" src="<%= asset_path('no-image.jpg') %>">
+            <% end %>
+          </div>
+          <div class="back">
+            <div class="back-content middle">
+              <h2 class="Name"><%= mitem.name %></h2>
+              <h4 class="Description"><%= mitem.description %></h4>
+              <h3><i class="fas fa-rupee-sign"></i><%= mitem.price %></h3>
+              <% if @current_user %>
+                <% item = @cart.cart_items.find_by(menu_item_name: mitem.name) %>
+                <% if !(item) %>
+                  <div class="add-cart">
+                    <%= form_with(url: "/cdash?mitem_id=#{mitem.id}", method: "post", class: "Add-cart-item", id: "#{mitem.name}") do %>
+                      <%= submit_tag("add to cart", class: "add-to-cart", id: "#{mitem.id}") %>
+                    <% end %>
+                  </div>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

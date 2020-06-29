@@ -1,0 +1,63 @@
+<% if !@current_user %>
+  <style>
+    .swiper-container {
+      margin-top: 1.83vh;
+    }
+  </style>
+<% end %>
+<section class="category-section">
+  <div class="swiper-container">
+    <div class="swiper-wrapper">
+      <%
+        mitem_ids = @active_menu.link_menu_items.map { |item| item.menu_item_id }
+        mitems = MenuItem.where(id: mitem_ids)
+      %>
+      <% mitems.select(:category).distinct.each do |item| %>
+        <div class="swiper-slide">
+          <div class="category-image">
+            <% menu_items = mitems.where(category: item.category) %>
+            <% image_set = 0 %>
+            <% menu_items.each do |mitem| %>
+              <% if image_set == 0 %>
+                <% if mitem.image.attached? %>
+                  <%= image_tag(mitem.image, class: "categ-img") %>
+                  <% image_set = 1 %>
+                <% end %>
+              <% end %>
+            <% end %>
+            <% if image_set == 0 %>
+              <img class="no-image" src="<%= asset_path('no-image.jpg') %>" />
+            <% end %>
+          </div>
+          <div class="category-link">
+            <h3>
+              <a href="#<%= item.category.split().join('_') %>">
+                <%= item.category %>
+              </a>
+            </h3>
+          </div>
+        </div>
+      <% end %>
+    <div class="swiper-pagination"></div>
+  </div>
+  <script>
+    var swiper = new Swiper('.swiper-container', {
+      effect: 'coverflow',
+      grabCursor: true,
+      centeredSlides: true,
+      slidesPerView: 'auto',
+      coverflowEffect: {
+        rotate: 0,
+        stretch: 0,
+        depth: 200,
+        modifier: 1,
+        slideShadows : true,
+      },
+      loop: true,
+      autoplay: {
+        delay: 2500,
+        disableOnInteraction: false,
+      },
+    });
+  </script>
+</section>

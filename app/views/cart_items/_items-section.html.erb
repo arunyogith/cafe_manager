@@ -1,0 +1,46 @@
+<% cart_items.each do |citem| %>
+  <body data-id = <%= citem.id %>>
+  <tr class="bordered">
+    <th scope="row" class="border-0">
+      <div class="p-2">
+        <% mitem = MenuItem.find_by(id: citem.menu_item_id) %>
+        <% if mitem.image.attached? %>
+          <%= image_tag(mitem.image, width: "70", height: "110") %>
+        <% else %>
+          <img src="<%= asset_path('no-image.jpg') %>" class="cart-no-image" width="70" height="110"/>
+        <% end %>
+        <div class="ml-3 d-inline-block align-middle">
+          <h5 class="mb-0">
+            <a id="item-name" href="#" class="text-dark d-inline-block align-middle">
+              <%= citem.menu_item_name %>
+            </a>
+          </h5>
+          <span class="text-muted font-weight-normal font-italic d-block">
+            Category: <%= citem.menu_item_category %>
+          </span>
+        </div>
+      </div>
+    </th>
+    <td class="border-0 align-middle">
+      <strong id="price<%= citem.id %>" class="citem-price"><%= citem.menu_item_price %></strong>
+    </td>
+    <td class="border-0 align-middle">
+      <div id="clicker">
+        <%= form_with(url: "/cart_items/#{citem.id}?sign=0", method: "put", id: "leftform#{citem.id}") do %>
+          <div id="<%= citem.id %>" class="leftarrow">&#9668;</div>
+        <% end %>
+        <div id="quantity-counter<%= citem.id %>" class="quantity-counter"><%= citem.quantity %></div>
+        <%= form_with(url: "/cart_items/#{citem.id}?sign=1", method: "put", id: "rightform#{citem.id}") do %>
+          <div id="<%= citem.id %>" class="rightarrow">&#9658;</div>
+        <% end %>
+      </div>
+    </td>
+    <td class="border-0 align-middle">
+      <%= form_with(url: "/cart_items/#{citem.id}", method: :delete) do %>
+        <button type="submit" class="text-dark">
+          <i class="fas fa-trash"></i>
+        </button>
+      <% end %>
+    </td>
+  </tr>
+<% end %>

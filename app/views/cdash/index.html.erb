@@ -1,0 +1,100 @@
+<% if !@current_user %>
+  <h1 class="menu-head">MENU<h1>
+  <a href="/" class="close"></a>
+<% end %>
+<% if @current_user %>
+  <% if flash[:order_success] %>
+    <script type="text/javascript">
+      $(document).ready(function () {
+          $('#modalPush').modal('show');
+      });
+    </script>
+    <div class="modal fade" id="modalPush" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-notify modal-info" role="document">
+        <div class="modal-content text-center">
+          <div class="modal-header d-flex justify-content-center" style="background-color: #0099ff">
+            <p class="heading" style="color: white; font-size: 22px; font-weight: 500">Order Placed</p>
+          </div>
+          <div class="modal-body">
+            <i class="fas fa-bell fa-4x" style="color: #0099ff"></i>
+            <p style="margin-top: 20px"><%= flash[:order_success] %></p>
+          </div>
+          <div class="modal-footer justify-content-center">
+            <a type="button" class="btn btn-outline-info waves-effect" data-dismiss="modal" style="font-weight: 540">OK</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+<% end %>
+
+<% if @current_user %>
+  <body data-count = <%= @count %>>
+<% end %>
+<main class="cdash-main">
+  <% if @current_user %>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+      <div class="container-fluid">
+        <a href="#" class="navbar-brand"><img src="<%= asset_path('logo.png') %>" /></a>
+        <div class="navbar" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a href="/cart_items" class="cart"><span></span></a>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                href="#"
+                class="nav-link dropdown-toggle"
+                id="navbarDropdownMenuLink-333"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                <i class="fas fa-user"></i>
+              </a>
+              <div
+                class="dropdown-menu dropdown-menu-right"
+                aria-labelledby="navbarDropdownMenuLink-333"
+              >
+                <% if @current_user.role == "customer" %>
+                  <a class="dropdown-item" href="/orders">My Orders</a>
+                <% end %>
+                <% if @current_user.role == "clerk" %>
+                  <a class="dropdown-item" href="/orders">Dashboard</a>
+                <% end %>
+                <% if @current_user.role == "admin" %>
+                  <a class="dropdown-item" href="/menus">Dashboard</a>
+                <% end %>
+                <p class="logout-link"><%= link_to "Sign-out", destroy_session_path, method: "delete" %></p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  <% end %>
+
+  <section  class="Menu-display">
+    <div class="Menu-category-section">
+      <%= render partial: "category-section", locals: {} %>
+    </div>
+
+    <div class="Menu-items-section">
+      <%
+        mitem_ids = @active_menu.link_menu_items.map { |item| item.menu_item_id }
+        mitems = MenuItem.where(id: mitem_ids)
+      %>
+      <% mitems.select(:category).distinct.each do |item| %>
+        <div class="Category-section">
+          <p class="Category-title" id="<%= item.category.split().join('_') %>"><%= item.category %></p>
+        </div>
+        <%= render partial: "menu-grid-section", locals: {
+          menu_items: mitems.where(category: item.category),
+          category: item.category }
+        %>
+      <% end %>
+    </div>
+  </section>
+
+    <a href="#" class="to-top"><i class="fa fa-chevron-up"></i></a>
+</main>
